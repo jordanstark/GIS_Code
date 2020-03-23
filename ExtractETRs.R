@@ -3,7 +3,6 @@
 # Mar 2020
 # Jordan Stark
 
-#configuration test
 
 #### setup ####
 # packages
