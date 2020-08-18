@@ -66,8 +66,12 @@ parkbound[,2:21] <- NULL # don't need attrs just the points
 parkbound <- parkbound[parkbound$OBJECTID<18,]
 
 
+trails <- st_read(paste(lib,"GRSM_TRAILS/GRSM_TRAILS.shp",sep=""))
+roads <- st_read(paste(lib,"GRSM_ROAD_CENTERLINES/GRSM_ROAD_CENTERLINES.shp",sep=""))
+
 tm_shape(finalsites) +
-  tm_dots(col="ETR",size=0.2) +
+  tm_dots(col="ETR",size=0.2)
+
 tm_shape(trails) +
   tm_lines(col="black",lty=2,id="TRAILNAME") +
 tm_shape(roads) +
