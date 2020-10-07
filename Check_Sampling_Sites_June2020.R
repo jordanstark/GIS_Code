@@ -42,8 +42,13 @@ crs(sites) <- stdcrs
 # import trails and roads for planning
 trails <- st_read(paste(GISlib,"GRSM_TRAILS/GRSM_TRAILS.shp",sep=""))
 roads  <- st_read(paste(GISlib,"GRSM_ROAD_CENTERLINES/GRSM_ROAD_CENTERLINES.shp",sep=""))
+park <- st_read(paste(GISlib,"GRSM_BOUNDARY_POLYGON/GRSM_BOUNDARY_POLYGON.shp",sep=""))
 trails <- st_transform(trails,stdcrs)
 roads  <- st_transform(roads,stdcrs)
+park <- st_transform(park,stdcrs)
+
+park <- park[park$OBJECTID<18,]  # just the main park, not AT and external roads
+
 
 
 # extract other GIS data to parksites and cosbysites
@@ -71,33 +76,33 @@ sitedf <- sitedf[sitedf$Last_Status=="good",]
 
 g1 <- ggplot(parksites, aes(x=Elev,y=max_CC)) +
   geom_point(alpha=0.05) +
-  geom_point(data=sitedf[sitedf$SRS=="yes",],color="red",size=4) +
-  geom_point(data=sitedf[sitedf$SRS=="no",],color="salmon",alpha=0.8,size=4) +
-  geom_point(data=sitedf[sitedf$SRS=="Validation",],color="cyan3",alpha=0.8,size=4) +
+  geom_point(data=sitedf[sitedf$SRS=="yes",],color="plum3",size=3) +
+  geom_point(data=sitedf[sitedf$SRS=="no",],color="aquamarine3",alpha=0.8,size=3) +
+  geom_point(data=sitedf[sitedf$SRS=="Validation",],color="khaki1",alpha=0.8,size=3) +
   theme_classic()
 
 g2 <- ggplot(parksites, aes(x=Elev,y=strdist)) +
   geom_point(alpha=0.05) +
-  geom_point(data=sitedf[sitedf$SRS=="yes",],color="red",size=4) +
-  geom_point(data=sitedf[sitedf$SRS=="no",],color="salmon",alpha=0.8,size=4) +
-  geom_point(data=sitedf[sitedf$SRS=="Validation",],color="cyan3",alpha=0.8,size=4) +
+  geom_point(data=sitedf[sitedf$SRS=="yes",],color="red",size=3) +
+  geom_point(data=sitedf[sitedf$SRS=="no",],color="salmon",alpha=0.8,size=3) +
+  geom_point(data=sitedf[sitedf$SRS=="Validation",],color="cyan3",alpha=0.8,size=3) +
   theme_classic()
 
 g3 <- ggplot(parksites, aes(x=Elev,y=log_TCI)) +
   geom_point(alpha=0.05) +
-  geom_point(data=sitedf[sitedf$SRS=="yes",],color="red",size=4) +
-  geom_point(data=sitedf[sitedf$SRS=="no",],color="salmon",alpha=0.8,size=4) +
-  geom_point(data=sitedf[sitedf$SRS=="Validation",],color="cyan3",alpha=0.8,size=4) +
+  geom_point(data=sitedf[sitedf$SRS=="yes",],color="plum3",size=3) +
+  geom_point(data=sitedf[sitedf$SRS=="no",],color="aquamarine3",alpha=0.8,size=3) +
+  geom_point(data=sitedf[sitedf$SRS=="Validation",],color="khaki1",alpha=0.8,size=3) +
   theme_classic()
 
 g4 <- ggplot(parksites, aes(x=Elev,y=Totrad)) +
   geom_point(alpha=0.05) +
-  geom_point(data=sitedf[sitedf$SRS=="yes",],color="red",size=4) +
-  geom_point(data=sitedf[sitedf$SRS=="no",],color="salmon",alpha=0.8,size=4) +
-  geom_point(data=sitedf[sitedf$SRS=="Validation",],color="cyan3",alpha=0.8,size=4) +
+  geom_point(data=sitedf[sitedf$SRS=="yes",],color="plum3",size=3) +
+  geom_point(data=sitedf[sitedf$SRS=="no",],color="aquamarine3",alpha=0.8,size=3) +
+  geom_point(data=sitedf[sitedf$SRS=="Validation",],color="khaki1",alpha=0.8,size=3) +
   theme_classic()
     
-g3 | g1 | g2 | g4
+g3 | g4 | g1
 
 #### ID trails etc
 
@@ -110,13 +115,15 @@ tm_shape(trails) +
 
 
 
-
+tm_shape(park) +
+  tm_polygons(alpha=0.1,border.col="black",col="green") +
 tm_shape(sites) +
-  tm_dots(col="SRS",size=0.2,id="ptID") +
+  tm_dots(col="SRS",size=0.1,id="ptID") +
 tm_shape(trails) +
   tm_lines(col="black",lty=2,id="TRAILNAME") +
 tm_shape(roads) +
-  tm_lines(col="red",id="RDLABEL") 
+  tm_lines(col="red",id="RDLABEL")
+
 
 tm_shape(BigCr,is.master=T) +
   tm_polygons(alpha=0.1,border.col="blue")
